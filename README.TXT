@@ -1,15 +1,15 @@
-/**********************************************************************
+﻿/**********************************************************************
  *  readme.txt template                                                   
  *  WordNet
 **********************************************************************/
 
-Name:    
-Login:   
-Hópur:
+Name:    Grímur Garpsson
+Login:   grimur14@ru.is
+Hópur:	4
 
-Partner name:     
-Partner login:    
-Hópur:
+Partner name: 	   Raquelita Ros Aguilar 
+Partner login:    raquelita15@ru.is
+Hópur: 	HMV
 
 
 /**********************************************************************

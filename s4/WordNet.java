@@ -8,7 +8,13 @@ import java.util.*;
  */
 public class WordNet {
 
-    // constructor takes the name of the two input files
+    private boolean noun;			   // True if a noun, else false
+	private boolean[] marked;          // marked[v] = has v been marked in dfs?
+    private int[] pre;                 // pre[v]    = preorder  number of v
+    private int[] post;                // post[v]   = postorder number of v
+    private int[] distTo;      		   // distTo[v] = length of shortest s->v path
+	
+	// constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms){
 
     }
@@ -18,7 +24,9 @@ public class WordNet {
 
     // is the word a WordNet nound?
     public boolean isNoun(String word){
-        return ;
+        // TODO: I put in the noun boolean value for this but I am now not sure how to use it.
+    	
+    	return ;
     }
 
     // distance between nounA and nounB (defined below)
