@@ -1,20 +1,25 @@
-package s4;
+package s4.src;
 
 import edu.princeton.cs.algs4.*;
-import java.util.*;
 
 /**
  * Created by raquelitarosaguilar on 03/10/2016.
  */
 public class Outcast {
 
+    private WordNet wordNet;
+
     // constructor takes a WordNet object
     public Outcast(WordNet wordNet){
-        return;
+
+        this.wordNet = wordNet;
     }
 
     // given an array of WordNet nouns, return an outcast
     public String outcast(String[] nouns){
+        String outcast = null;
+
+        return outcast;
 
     }
 
