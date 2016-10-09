@@ -8,19 +8,23 @@ import java.util.*;
  */
 public class SAP {
 
+    private Digraph digraph;
+
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Diagraph G){
-
+        this.digraph = new Digraph(G);
     }
 
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w){
-        return;
+
     }
 
     // a common ancestor of v and w that participates in a shortest ancestral path
     // -1 if no such path
-    public int ancesto(int v, int w){
+    public int ancestor(int v, int w){
+        int shortestPath = Integer.MAX_VALUE;
+
         return;
     }
 
@@ -37,10 +41,23 @@ public class SAP {
     }
 
     /**
-     * Test client
-     * Do a unit testing of this class
+     * The following test client takes the name of a diagraph input file as a command line argument,
+     * constructs the digraph, reads in vertex paris from standard input, and prints out the length
+     * of the shortest ancestral path between the two vertices and a common ancestor that participates in that path
+     * This test client was recieved from http://coursera.cs.princeton.edu/algs4/assignments/wordnet.html
      */
     public static void main(String[] args){
+        In in = new In(args[0]);
+        Digraph G = new Digraph(in);
+        SAP sap = new SAP(G);
+
+        while(!StdIn.isEmpty()){
+            int v = StdIn.readInt();
+            int w = StdIn.readInt();
+            int length = sap.length(v, w);
+            int ancestor = sap.ancestor(v, w);
+            System.out.println("length = %d, ancestor = %d\n", length, ancestor);
+        }
 
     }
 
