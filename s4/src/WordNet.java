@@ -9,8 +9,8 @@ import java.util.*;
 public class WordNet {
 
     private SAP sap;
-    private HashMap<Integer, String> synsID;
-    private HashMap<String, Bag<Integer>> nounID;
+    private HashMap<Integer, String> synsets;
+    private HashMap<Integer, Bag<Integer>> hypernym;
 
 
     /*****************************************************************
@@ -18,8 +18,8 @@ public class WordNet {
      *****************************************************************/
     public WordNet(String synsets, String hypernyms){
 
-        this.synsID = new HashMap<>();
-        this.nounID = new HashMap<>();
+        this.synsets = new HashMap<Integer, String>();
+        this.hypernym = new HashMap<Integer, Bag<Integer>>();
         synsetsInput(synsets);
         hypernymsInput(hypernyms);
     }
@@ -32,37 +32,20 @@ public class WordNet {
 
         // read from standard input
         In filename = new In(synset);
-        int iter = 0;
 
         // while the file contain some lines
         while (!filename.isEmpty()){
             String[] lines = filename.readLine().split(",");
-
-            for (String string  : lines[1].split(" ")){
-                Bag<Integer> words = new Bag<>();
-
-                if(nounID.containsKey(string)){
-                    words = nounID.get(string);
-                }
-                words.add(Integer.parseInt(lines[0]));
-                nounID.put(string, words);
-            }
-
-//            for(String noun : nouns){
-//                if(nounID.get(noun) == null){
-//                    nounID.put(noun, new Bag<Integer>());
-//                }
-//                nounID.get(noun).add(synsetID);
-//            }
+            synsets.put(Integer.parseInt(lines[0]), lines[1]);
         }
-        iter++;
     }
 
     /*****************************************************************
      * A helper method that reads a hypernyms file from standard input
      *****************************************************************/
     private Digraph hypernymsInput(String hypernyms){
-        Digraph digraph = new Digraph(synsID.size());
+
+        Digraph digraph = new Digraph(synsets.size());
 
         // read from standard input
         In filename = new In(hypernyms);
@@ -73,6 +56,15 @@ public class WordNet {
             for(int i = 1; i < lines.length; i++){
                 int id = Integer.valueOf(lines[i]);
                 digraph.addEdge(synsetID, id);
+
+                Bag<Integer> bagOfHypernyms;
+                if(hypernym.containsKey(synsetID)){
+                    bagOfHypernyms = hypernym.get(synsetID);
+                }else {
+                    bagOfHypernyms = new Bag<Integer>();
+                }
+                bagOfHypernyms.add(id);
+                hypernym.put(synsetID, bagOfHypernyms);
             }
         }
 
@@ -93,17 +85,16 @@ public class WordNet {
     }
 
     /*****************************************************************
-     * Returns all the nouns in the net
+     * Returns all the nouns in the Wordnet
      *****************************************************************/
-    // return all WordNet nouns
     public Iterable<String> nouns() {
-        // keySet() returns the a view of the keys contained in this map
-        return nounID.keySet();
+        return synsets.values();
     }
 
-    // is the word a WordNet nound?
+    // is the word a WordNet noun?
     public boolean isNoun(String word){
-    	return nounID.containsKey(word);
+
+        return synsets.containsValue(word);
     }
 
     /*****************************************************************
@@ -113,7 +104,7 @@ public class WordNet {
     public int distance(String nounA, String nounB){
         // Lets throw an exception if word is not a noun
         if(isNoun(nounA) || isNoun(nounB)) {
-            return sap.length(nounID.get(nounA), nounID.get(nounB));
+            return sap.length(hypernym.get(nounA), hypernym.get(nounB));
         }else{
             throw new IllegalArgumentException("Invalid: both words must be noun");
         }
@@ -127,7 +118,7 @@ public class WordNet {
 
         // Lets throw an exception if word is not a noun
         if (isNoun(nounA) || isNoun(nounB)) {
-            return synsID.get(sap.ancestor(nounID.get(nounA), nounID.get(nounB)));
+            return synsets.get(sap.ancestor(hypernym.get(nounA), hypernym.get(nounB)));
         }else{
             throw new IllegalArgumentException("Invalid: both words must be noun");
         }
@@ -138,11 +129,12 @@ public class WordNet {
      *****************************************************************/
     public static void main(String[] args){
 
-        WordNet wordNet = new WordNet("*/synsets.txt", "*/hypernyms.txt");
+        WordNet wordNet = new WordNet("./wordnet_input/synsets.txt", "./wordnet_input/hypernyms.txt");
         //WordNet wordNet = new WordNet(args[0], args[1]);
-
+        System.out.println("Type in two nouns");
 
         while (!StdIn.isEmpty()){
+
             String v = StdIn.readLine();
             String w = StdIn.readLine();
 
