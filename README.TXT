@@ -5,7 +5,7 @@
 
 Name:    Grímur Garpsson
 Login:   grimur14@ru.is
-Hópur:	4
+Hópur:	1
 
 Partner name: 	   Raquelita Ros Aguilar 
 Partner login:    raquelita15@ru.is
