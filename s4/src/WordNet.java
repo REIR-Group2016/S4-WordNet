@@ -1,6 +1,7 @@
 package s4.src;
 
 import edu.princeton.cs.algs4.*;
+
 import java.util.*;
 
 /**
@@ -16,25 +17,30 @@ public class WordNet {
     /*****************************************************************
      * constructor takes the name of the two input files
      *****************************************************************/
-    public WordNet(String synsets, String hypernyms){
+    public WordNet(String synsets, String hypernyms) {
+        if(synsets == null || hypernyms == null){
+            throw new IllegalArgumentException("Input is invalid");
+        }
 
         this.synsets = new HashMap<Integer, String>();
         this.hypernym = new HashMap<Integer, Bag<Integer>>();
         synsetsInput(synsets);
         hypernymsInput(hypernyms);
+
+        sap = new SAP(hypernymsInput(hypernyms));
     }
 
     /*****************************************************************
      * A helper method that reads a synsets file from standard input and
      * and checks if it is valid CSV
      *****************************************************************/
-    private void synsetsInput(String synset){
+    private void synsetsInput(String synset) {
 
         // read from standard input
         In filename = new In(synset);
 
         // while the file contain some lines
-        while (!filename.isEmpty()){
+        while (!filename.isEmpty()) {
             String[] lines = filename.readLine().split(",");
             synsets.put(Integer.parseInt(lines[0]), lines[1]);
         }
@@ -43,24 +49,24 @@ public class WordNet {
     /*****************************************************************
      * A helper method that reads a hypernyms file from standard input
      *****************************************************************/
-    private Digraph hypernymsInput(String hypernyms){
+    private Digraph hypernymsInput(String hypernyms) {
 
         Digraph digraph = new Digraph(synsets.size());
 
         // read from standard input
         In filename = new In(hypernyms);
 
-        while (!filename.isEmpty()){
+        while (!filename.isEmpty()) {
             String[] lines = filename.readLine().split(",");
             int synsetID = Integer.parseInt(lines[0]);
-            for(int i = 1; i < lines.length; i++){
+            for (int i = 1; i < lines.length; i++) {
                 int id = Integer.valueOf(lines[i]);
                 digraph.addEdge(synsetID, id);
 
                 Bag<Integer> bagOfHypernyms;
-                if(hypernym.containsKey(synsetID)){
+                if (hypernym.containsKey(synsetID)) {
                     bagOfHypernyms = hypernym.get(synsetID);
-                }else {
+                } else {
                     bagOfHypernyms = new Bag<Integer>();
                 }
                 bagOfHypernyms.add(id);
@@ -77,10 +83,10 @@ public class WordNet {
      * cycle or not
      ****************************************************************
      * @param digraph*/
-    private void isCycle(Digraph digraph){
+    private void isCycle(Digraph digraph) {
         DirectedCycle directedCycle = new DirectedCycle(digraph);
-        if (directedCycle.hasCycle()){
-            throw new IllegalArgumentException("This graph has a cycle in it!");
+        if (directedCycle.hasCycle()) {
+            throw new IllegalArgumentException("Graph is not acyclic");
         }
     }
 
@@ -92,7 +98,7 @@ public class WordNet {
     }
 
     // is the word a WordNet noun?
-    public boolean isNoun(String word){
+    public boolean isNoun(String word) {
 
         return synsets.containsValue(word);
     }
@@ -101,13 +107,12 @@ public class WordNet {
      * Finds the distance between nouns
      * distance between nounA and nounB (defined below)
      *****************************************************************/
-    public int distance(String nounA, String nounB){
+    public int distance(String nounA, String nounB) {
         // Lets throw an exception if word is not a noun
-        if(isNoun(nounA) || isNoun(nounB)) {
+        if (isNoun(nounA) || isNoun(nounB)) {
             return sap.length(hypernym.get(nounA), hypernym.get(nounB));
-        }else{
-            throw new IllegalArgumentException("Invalid: both words must be noun");
-        }
+        } else
+            throw new IllegalArgumentException();
     }
 
     /*****************************************************************
@@ -115,35 +120,33 @@ public class WordNet {
      * ancestor of nounA and nounB
      *****************************************************************/
     public String sap(String nounA, String nounB) {
-
-        // Lets throw an exception if word is not a noun
-        if (isNoun(nounA) || isNoun(nounB)) {
+        if((isNoun(nounA)) && (isNoun(nounB))){
             return synsets.get(sap.ancestor(hypernym.get(nounA), hypernym.get(nounB)));
-        }else{
-            throw new IllegalArgumentException("Invalid: both words must be noun");
-        }
+        }else
+            throw new IllegalArgumentException();
     }
 
     /*****************************************************************
      * Test client
      *****************************************************************/
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         WordNet wordNet = new WordNet("./wordnet_input/synsets.txt", "./wordnet_input/hypernyms.txt");
-        //WordNet wordNet = new WordNet(args[0], args[1]);
+
+
         System.out.println("Type in two nouns");
 
-        while (!StdIn.isEmpty()){
+        while (!StdIn.isEmpty()) {
 
             String v = StdIn.readLine();
             String w = StdIn.readLine();
 
-            if(!wordNet.isNoun(v)){
+            if (!wordNet.isNoun(v)) {
                 StdOut.println(v + " is not in the WordNet");
                 continue;
             }
 
-            if(!wordNet.isNoun(w)){
+            if (!wordNet.isNoun(w)) {
                 StdOut.println(w + " is not in the WordNet");
                 continue;
             }
@@ -152,7 +155,7 @@ public class WordNet {
             String ancestor = wordNet.sap(v, w);
             StdOut.printf("Distance = %d, ancestor = %s\n", dist, ancestor);
         }
-
     }
 
 }
+
