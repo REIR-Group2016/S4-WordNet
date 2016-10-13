@@ -17,14 +17,31 @@ Hópur: 	HMV
  *  information in synsets.txt. Why did you make this choice?
  **********************************************************************/
 
+A HashMap was used to store all data with key of integers
+and a key of strings.
 
+    private HashMap<Integer, String> synsets;
+
+To store the data the choice was between hashtable and symble table
+and the reason a hashmap was used was mainly for the reason that
+hash table is more like a dictionary that stores key-value pairs
+which was perfect for storing the data for this project.
 
 /**********************************************************************
  *  Describe concisely the data structure(s) you used to store the 
  *  information in hypernyms.txt. Why did you make this choice?
  **********************************************************************/
 
+A HashMap was used to store all data with key of integers
+and a bag of integers.
 
+    private HashMap<Integer, Bag<Integer>> hypernym;
+
+
+To store the data the choice was between hashtable and symble table
+and the reason a hashmap was used was mainly for the reason that
+hash table is more like a dictionary that stores key-value pairs
+which was perfect for storing the data for this project.
 
 /**********************************************************************
  *  Describe concisely the algorithm you used to check if the digraph 
@@ -42,12 +59,23 @@ Hópur: 	HMV
 
 Description:
 
+IS_ROOTED
+Root was initialized and a if-loop was used to go through the graph and
+check the roots. Then if the roots were !=1 a exception was thrown
+saying that graph was not rooted.
+
+IS_CYCLE
+The obvious choice here was to use DirectedCycle class which has a method called
+hascycle() and checks if a graph has a cycle or not. Then it was checked
+if the graph had cycle and if so an exception was thrown saying that graph
+was not acyclic.
+
 
 method                               best case            worst case
 ------------------------------------------------------------------------
-rooted check
+rooted check                         constant               V
 
-DAG check
+DAG check                               V                   V+E
 
 
 
@@ -61,6 +89,19 @@ DAG check
 
 Description:
 
+A helper methods was created to take care of duplicate logic so that the below
+methods only had to call those helper methods in relevant places which made
+the code cleaner and more understandable.
+
+The following helper methods were created:
+ - sapHelper()
+   -> which took care of all the computation for shortest path and common ancestor
+
+ - isOutOfBoundaries
+   -> which checked if input was inside of valid boundaries, if it was not then
+      an exception was thrown. Since it was a requirement that all methods should
+      throw IndexOutOfBoundsException it was ideal to create a specific method for
+      that purpose.
 
 method                               best case            worst case
 ------------------------------------------------------------------------
@@ -94,6 +135,9 @@ ancestor(Iterable<Integer> v,
  *  classmates, and friends) and attribute them by name.
  **********************************************************************/
 
+
+Raquelita discussed this project with a friend Mr. Carbrera who helped
+her to understand the logic of this algorithm.
 
 /**********************************************************************
  *  Describe any serious problems you encountered.                    

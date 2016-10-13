@@ -39,7 +39,6 @@ public class WordNet {
         // read from standard input
         In filename = new In(synset);
 
-        // while the file contain some lines
         while (!filename.isEmpty()) {
             String[] lines = filename.readLine().split(",");
             synsets.put(Integer.parseInt(lines[0]), lines[1]);
@@ -74,7 +73,7 @@ public class WordNet {
             }
         }
 
-        isCycle(digraph);
+        isRootedOrCycle(digraph);
         return digraph;
     }
 
@@ -83,11 +82,19 @@ public class WordNet {
      * cycle or not
      ****************************************************************
      * @param digraph*/
-    private void isCycle(Digraph digraph) {
+    private void isRootedOrCycle(Digraph digraph) {
+
         DirectedCycle directedCycle = new DirectedCycle(digraph);
         if (directedCycle.hasCycle()) {
             throw new IllegalArgumentException("Graph is not acyclic");
         }
+        int root = 0;
+        for (int i = 0; i < digraph.V(); i++){
+            if(!digraph.adj(i).iterator().hasNext())
+                root++;
+        }
+        if(root != 1)
+            throw new IllegalArgumentException("Graph is not rooted");
     }
 
     /*****************************************************************
@@ -100,7 +107,7 @@ public class WordNet {
     // is the word a WordNet noun?
     public boolean isNoun(String word) {
 
-        return synsets.containsValue(word);
+        return synsets.containsKey(word);
     }
 
     /*****************************************************************
@@ -108,11 +115,11 @@ public class WordNet {
      * distance between nounA and nounB (defined below)
      *****************************************************************/
     public int distance(String nounA, String nounB) {
-        // Lets throw an exception if word is not a noun
-        if (isNoun(nounA) || isNoun(nounB)) {
+        // Lets throw an exception if worda are not a noun
+        if (!isNoun(nounA) || !isNoun(nounB))
+            throw new IllegalArgumentException("Invalid nouns");
+
             return sap.length(hypernym.get(nounA), hypernym.get(nounB));
-        } else
-            throw new IllegalArgumentException();
     }
 
     /*****************************************************************
@@ -120,10 +127,10 @@ public class WordNet {
      * ancestor of nounA and nounB
      *****************************************************************/
     public String sap(String nounA, String nounB) {
-        if((isNoun(nounA)) && (isNoun(nounB))){
+        if((!isNoun(nounA)) || (!isNoun(nounB)))
+            throw new IllegalArgumentException("Invalid nouns");
+
             return synsets.get(sap.ancestor(hypernym.get(nounA), hypernym.get(nounB)));
-        }else
-            throw new IllegalArgumentException();
     }
 
     /*****************************************************************
@@ -131,8 +138,9 @@ public class WordNet {
      *****************************************************************/
     public static void main(String[] args) {
 
+        // Change path to your local path
         WordNet wordNet = new WordNet("./wordnet_input/synsets.txt", "./wordnet_input/hypernyms.txt");
-
+        //WordNet wordNet = new WordNet(args[0], args[1]);
 
         System.out.println("Type in two nouns");
 
