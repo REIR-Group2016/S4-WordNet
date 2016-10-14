@@ -18,15 +18,13 @@ public class WordNet {
      * constructor takes the name of the two input files
      *****************************************************************/
     public WordNet(String synsets, String hypernyms) {
-        if(synsets == null || hypernyms == null){
+        if (synsets == null || hypernyms == null) {
             throw new IllegalArgumentException("Input is invalid");
         }
 
         this.synsets = new HashMap<Integer, String>();
         this.hypernym = new HashMap<Integer, Bag<Integer>>();
         synsetsInput(synsets);
-        hypernymsInput(hypernyms);
-
         sap = new SAP(hypernymsInput(hypernyms));
     }
 
@@ -83,17 +81,16 @@ public class WordNet {
      ****************************************************************
      * @param digraph*/
     private void isRootedOrCycle(Digraph digraph) {
-
         DirectedCycle directedCycle = new DirectedCycle(digraph);
         if (directedCycle.hasCycle()) {
             throw new IllegalArgumentException("Graph is not acyclic");
         }
         int root = 0;
-        for (int i = 0; i < digraph.V(); i++){
-            if(!digraph.adj(i).iterator().hasNext())
+        for (int i = 0; i < digraph.V(); i++) {
+            if (!digraph.adj(i).iterator().hasNext())
                 root++;
         }
-        if(root != 1)
+        if (root != 1)
             throw new IllegalArgumentException("Graph is not rooted");
     }
 
@@ -106,8 +103,7 @@ public class WordNet {
 
     // is the word a WordNet noun?
     public boolean isNoun(String word) {
-
-        return synsets.containsKey(word);
+        return synsets.containsValue(word);
     }
 
     /*****************************************************************
@@ -119,7 +115,18 @@ public class WordNet {
         if (!isNoun(nounA) || !isNoun(nounB))
             throw new IllegalArgumentException("Invalid nouns");
 
-            return sap.length(hypernym.get(nounA), hypernym.get(nounB));
+        int keya = -1;
+        int keyb = -1;
+        for (Map.Entry<Integer, String> entry : synsets.entrySet()) {
+            if (entry.getValue().compareTo(nounA) == 0) {
+                keya = entry.getKey();
+            }
+            if (entry.getValue().compareTo(nounB) == 0) {
+                keyb = entry.getKey();
+            }
+        }
+
+        return sap.length(keya, keyb);
     }
 
     /*****************************************************************
@@ -127,10 +134,21 @@ public class WordNet {
      * ancestor of nounA and nounB
      *****************************************************************/
     public String sap(String nounA, String nounB) {
-        if((!isNoun(nounA)) || (!isNoun(nounB)))
+        if (!isNoun(nounA) || !isNoun(nounB))
             throw new IllegalArgumentException("Invalid nouns");
 
-            return synsets.get(sap.ancestor(hypernym.get(nounA), hypernym.get(nounB)));
+        int keya = -1;
+        int keyb = -1;
+        for (Map.Entry<Integer, String> entry : synsets.entrySet()) {
+            if (entry.getValue().compareTo(nounA) == 0) {
+                keya = entry.getKey();
+            }
+            if (entry.getValue().compareTo(nounB) == 0) {
+                keyb = entry.getKey();
+            }
+        }
+
+        return synsets.get(sap.ancestor(keya, keyb));
     }
 
     /*****************************************************************
