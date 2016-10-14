@@ -10,6 +10,7 @@ import java.util.*;
 public class WordNet {
 
     private SAP sap;
+    private Object[] mSortedList;
     private HashMap<Integer, String> synsets;
     private HashMap<Integer, Bag<Integer>> hypernym;
 
@@ -26,6 +27,16 @@ public class WordNet {
         this.hypernym = new HashMap<Integer, Bag<Integer>>();
         synsetsInput(synsets);
         sap = new SAP(hypernymsInput(hypernyms));
+        mSortedList = this.synsets.entrySet().toArray();
+        Arrays.sort(mSortedList, 0, mSortedList.length, new Comparator<Object>() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public int compare(Object o1, Object o2) {
+                Map.Entry<Integer, String> l = (Map.Entry<Integer, String>) o1;
+                Map.Entry<Integer, String> r = (Map.Entry<Integer, String>) o2;
+                return l.getValue().compareTo(r.getValue());
+            }
+        });
     }
 
     /*****************************************************************
@@ -110,12 +121,13 @@ public class WordNet {
      * Finds the distance between nouns
      * distance between nounA and nounB (defined below)
      *****************************************************************/
+    @SuppressWarnings("unchecked")
     public int distance(String nounA, String nounB) {
         // Lets throw an exception if worda are not a noun
         if (!isNoun(nounA) || !isNoun(nounB))
             throw new IllegalArgumentException("Invalid nouns");
 
-        int keya = -1;
+        /*int keya = -1;
         int keyb = -1;
         for (Map.Entry<Integer, String> entry : synsets.entrySet()) {
             if (entry.getValue().compareTo(nounA) == 0) {
@@ -124,7 +136,22 @@ public class WordNet {
             if (entry.getValue().compareTo(nounB) == 0) {
                 keyb = entry.getKey();
             }
-        }
+        }*/
+
+        Comparator<Object> comparator = new Comparator<Object>() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public int compare(Object o1, Object o2) {
+                Map.Entry<Integer, String> entry = (Map.Entry<Integer, String>) o1;
+                String noun = (String) o2;
+                return entry.getValue().compareTo(noun);
+            }
+        };
+        int keya = Arrays.binarySearch(mSortedList, nounA, comparator);
+        int keyb = Arrays.binarySearch(mSortedList, nounB, comparator);
+
+        keya = ((Map.Entry<Integer, String>) mSortedList[keya]).getKey();
+        keyb = ((Map.Entry<Integer, String>) mSortedList[keyb]).getKey();
 
         return sap.length(keya, keyb);
     }
@@ -133,11 +160,12 @@ public class WordNet {
      * a synset (second field of synsets.txt) that is the common
      * ancestor of nounA and nounB
      *****************************************************************/
+    @SuppressWarnings("unchecked")
     public String sap(String nounA, String nounB) {
         if (!isNoun(nounA) || !isNoun(nounB))
             throw new IllegalArgumentException("Invalid nouns");
 
-        int keya = -1;
+        /*int keya = -1;
         int keyb = -1;
         for (Map.Entry<Integer, String> entry : synsets.entrySet()) {
             if (entry.getValue().compareTo(nounA) == 0) {
@@ -146,7 +174,22 @@ public class WordNet {
             if (entry.getValue().compareTo(nounB) == 0) {
                 keyb = entry.getKey();
             }
-        }
+        }*/
+
+        Comparator<Object> comparator = new Comparator<Object>() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public int compare(Object o1, Object o2) {
+                Map.Entry<Integer, String> entry = (Map.Entry<Integer, String>) o1;
+                String noun = (String) o2;
+                return entry.getValue().compareTo(noun);
+            }
+        };
+        int keya = Arrays.binarySearch(mSortedList, nounA, comparator);
+        int keyb = Arrays.binarySearch(mSortedList, nounB, comparator);
+
+        keya = ((Map.Entry<Integer, String>) mSortedList[keya]).getKey();
+        keyb = ((Map.Entry<Integer, String>) mSortedList[keyb]).getKey();
 
         return synsets.get(sap.ancestor(keya, keyb));
     }
@@ -157,7 +200,7 @@ public class WordNet {
     public static void main(String[] args) {
 
         // Change path to your local path
-        WordNet wordNet = new WordNet("./wordnet_input/synsets.txt", "./wordnet_input/hypernyms.txt");
+        WordNet wordNet = new WordNet("./wordnet_input/synsets.txt", "./wordnet_input/hypernyms100K.txt");
         //WordNet wordNet = new WordNet(args[0], args[1]);
 
         System.out.println("Type in two nouns");
