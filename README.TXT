@@ -3,13 +3,13 @@
  *  WordNet
 **********************************************************************/
 
-Name:    Grímur Garpsson
-Login:   grimur14@ru.is
-Hópur:	1
+Name:    Raquelita Ros Aguilar 
+Login:   raquelita15@ru.is
+Hópur:	 HMV
 
-Partner name: 	   Raquelita Ros Aguilar 
-Partner login:    raquelita15@ru.is
-Hópur: 	HMV
+Partner name: 	Grímur Garpsson   
+Partner login:  grimur14@ru.is
+Hópur: 	1
 
 
 /**********************************************************************
@@ -127,9 +127,8 @@ ancestor(Iterable<Integer> v,		3			3N^2
  *  Known bugs / limitations.
  **********************************************************************/
 
-Couldn't get outcast to function, but couldn't see anthing wrong with its logic.
-
-Throws an error based on checking for nouns in the distance function of Word Net.
+Couldn't get outcast to function, takes entire word tree instead of just the nouns,
+we could not find a way to split the strings to get the nouns we wanted.
 
 /**********************************************************************
  *  Describe whatever help (if any) that you received.
@@ -137,7 +136,6 @@ Throws an error based on checking for nouns in the distance function of Word Net
  *  include any help from people (including course staff, lab TAs,
  *  classmates, and friends) and attribute them by name.
  **********************************************************************/
-
 
 Raquelita discussed this project with a friend Mr. Carbrera who helped
 her to understand the logic of this algorithm.
@@ -154,9 +152,9 @@ Due to miscommunication it was attempted to implement Outcast before Word Net wa
  *  sentence explaining what each of you contributed.
  **********************************************************************/
 
-I did our work on the Outcast class, helped fill in the README and submitted the work.
+Grímur did our work on the Outcast class and helped fill in most of the README.
 
-Raquelita did most of the other work on this project.
+I did most of the other work on this project.
 
 
 /**********************************************************************
