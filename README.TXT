@@ -105,14 +105,14 @@ The following helper methods were created:
 
 method                               best case            worst case
 ------------------------------------------------------------------------
-length(int v, int w)
+length(int v, int w)			3			3N^2
 
-ancestor(int v, int w)
+ancestor(int v, int w)			3			3N^2
 
-length(Iterable<Integer> v,
+length(Iterable<Integer> v,		3			3N^2
        Iterable<Integer> w)
 
-ancestor(Iterable<Integer> v,
+ancestor(Iterable<Integer> v,		3			3N^2
          Iterable<Integer> w)
 
 
@@ -127,6 +127,9 @@ ancestor(Iterable<Integer> v,
  *  Known bugs / limitations.
  **********************************************************************/
 
+Couldn't get outcast to function, but couldn't see anthing wrong with its logic.
+
+Throws an error based on checking for nouns in the distance function of Word Net.
 
 /**********************************************************************
  *  Describe whatever help (if any) that you received.
@@ -143,6 +146,7 @@ her to understand the logic of this algorithm.
  *  Describe any serious problems you encountered.                    
  **********************************************************************/
 
+Due to miscommunication it was attempted to implement Outcast before Word Net was complete. This wasted a lot of time.
 
 /**********************************************************************
  *  If you worked with a partner, assert below that you followed
@@ -150,7 +154,9 @@ her to understand the logic of this algorithm.
  *  sentence explaining what each of you contributed.
  **********************************************************************/
 
+I did our work on the Outcast class, helped fill in the README and submitted the work.
 
+Raquelita did most of the other work on this project.
 
 
 /**********************************************************************
